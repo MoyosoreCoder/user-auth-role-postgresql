@@ -1,22 +1,31 @@
-//import Sequelize
+// import Sequelize
 import { Sequelize } from "sequelize";
+import dotenv from "dotenv";
 import createUserModel from "../model/userModel.js";
 
-export const dbconnect = async (database, username, password) => {
-  const sequelize = new Sequelize(database, username, password, {
-    host: "localhost",
+dotenv.config(); // loads environment variables from .env
+
+// create sequelize instance using .env variables
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASS,
+  {
+    host: process.env.DB_HOST || "localhost",
     dialect: "postgres",
-  });
+  }
+);
+
+export const dbconnect = async () => {
   try {
-    //these three await came later aftercreating model/usermodel.js
     await sequelize.authenticate();
     await createUserModel(sequelize);
 
-    // sequelize.sync({ force: true }) drop off existing table
     // await sequelize.sync({ force: true });
+    //  // drops and recreates
     await sequelize.sync({ alter: true });
-    console.log("Connection has been established successfully.");
+    console.log("✅ Connection has been established successfully.");
   } catch (error) {
-    console.error("Unable to connect to the database:", error);
+    console.error("❌ Unable to connect to the database:", error);
   }
 };
