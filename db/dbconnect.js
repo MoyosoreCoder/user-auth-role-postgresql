@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import createUserModel from "../models/auth.js";
 
 dotenv.config(); // loads environment variables from .env
-
+let User = null;
 // create sequelize instance using .env variables
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -19,7 +19,7 @@ const sequelize = new Sequelize(
 export const dbconnect = async () => {
   try {
     await sequelize.authenticate();
-    await createUserModel(sequelize);
+    User = await createUserModel(sequelize);
 
     // await sequelize.sync({ force: true });
     //  // drops and recreates
@@ -29,3 +29,4 @@ export const dbconnect = async () => {
     console.error("❌ Unable to connect to the database:", error);
   }
 };
+export { User };
