@@ -1,7 +1,7 @@
 // import Sequelize
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
-import createUserModel from "../models/auth.js";
+import createUserModel from "../models/userModel.js";
 
 dotenv.config(); // loads environment variables from .env
 let User = null;

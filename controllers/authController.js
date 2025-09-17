@@ -1,5 +1,5 @@
 import { User } from "../db/dbconnect.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export const registerUser = async (req, res) => {
   try {
@@ -13,7 +13,7 @@ export const registerUser = async (req, res) => {
     } else {
       //create user after hashing password
       const saltRounds = 10;
-      const hashedPassword = bcrypt(password, saltRounds);
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
       const user = await User.create({
         //just create without hashing password
         // ...req.body
@@ -40,7 +40,7 @@ export const loginUser = async (req, res) => {
     // compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(400).json({ message: "Invalid password" });
     }
     res.json({ message: "Login successful", user });
   } catch (error) {
