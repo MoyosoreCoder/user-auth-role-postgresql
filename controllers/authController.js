@@ -4,6 +4,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
 } from "../auth/authToken.js";
+import jwt from "jsonwebtoken";
 import { json } from "sequelize";
 
 export const registerUser = async (req, res) => {
@@ -63,13 +64,15 @@ export const loginUser = async (req, res) => {
     //cosole.log(dataValues);
     const accessToken = generateAccessToken(exist.dataValues);
     const refreshToken = generateRefreshToken(exist.dataValues);
-    //res.status(200).json(exist);
-    //clear cookie
 
-    exist.update({ refreshToken: refreshToken });
+    //update DB
+    await exist.update({ refreshToken: refreshToken });
+
+    //clear cookie
     //res.clearCookie("refreshToken");
 
     res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true });
+
     res.status(200).json({
       message: "User logged in",
       username: exist.dataValues.username,
@@ -78,5 +81,32 @@ export const loginUser = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+export const refreshTokenController = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+      return res.status(401).json({ message: "refresh token not found" });
+    }
+    //check DB for refresh token from log in route using exist.update
+    const user = await User.findOne({ where: { refreshToken } });r
+    console.log(user);
+    if (!user) {
+      res.status(403).json({ message: "forbidden token or token not valid" });
+    }
+    jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET,
+      (err, decoded) => {
+        if (err) {
+          res.status(403).json({ message: "Invalid token or expired" });
+        }
+        const token = generateAccessToken(user.dataValues);
+        return res.status(200).json({ newAccessToken: token });
+      }
+    );
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
