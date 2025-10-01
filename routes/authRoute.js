@@ -3,8 +3,10 @@ import {
   registerUser,
   loginUser,
   refreshTokenController,
+  logoutController,
+  profileController,
 } from "../controllers/authController.js";
-
+import { authenticateToken } from "../auth/authToken.js";
 const router = Router();
 /*
 router.get("/", (req, res) => {
@@ -14,4 +16,7 @@ router.get("/", (req, res) => {
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/refreshtoken", refreshTokenController);
+router.post("/logout", logoutController);
+router.post("/profile", authenticateToken, profileController);
+
 export default router;

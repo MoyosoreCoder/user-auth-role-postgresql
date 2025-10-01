@@ -3,8 +3,10 @@ import bcrypt from "bcryptjs";
 import {
   generateAccessToken,
   generateRefreshToken,
+  authenticateToken,
 } from "../auth/authToken.js";
 import jwt from "jsonwebtoken";
+
 import { json } from "sequelize";
 
 export const registerUser = async (req, res) => {
@@ -90,7 +92,7 @@ export const refreshTokenController = async (req, res) => {
       return res.status(401).json({ message: "refresh token not found" });
     }
     //check DB for refresh token from log in route using exist.update
-    const user = await User.findOne({ where: { refreshToken } });r
+    const user = await User.findOne({ where: { refreshToken: refreshToken } });
     console.log(user);
     if (!user) {
       res.status(403).json({ message: "forbidden token or token not valid" });
@@ -108,5 +110,36 @@ export const refreshTokenController = async (req, res) => {
     );
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const logoutController = async (req, res) => {
+  try {
+    //use cookies to logout
+    const loginRefreshToken = req.cookies.refreshToken;
+    if (!loginRefreshToken) {
+      return res.status(401).json("refresh token not found");
+    }
+    const userDB = await User.findOne({
+      where: { refreshToken: loginRefreshToken },
+    });
+    if (userDB != null) {
+      await userDB.update({ refreshToken: null });
+    }
+    res.clearCookie("refreshToken");
+    return res.status(200).json({ message: "user logout successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+export const profileController = async (req, res) => {
+ try {
+    // `req.user` comes from your decoded JWT
+    res.status(200).json({
+      message: "Dashboard",
+      user: req.user, // send user data decoded from token
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
   }
 };
