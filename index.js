@@ -1,8 +1,12 @@
 import express from "express";
+import cookieParser from "cookie-parser"
 import { dbconnect } from "./db/dbconnect.js";
 import apiRouter from "./routes/authRoute.js";
 
 const app = express();
+
+app.use(cookieParser())
+
 //middleware to allow json request
 app.use(express.json());
 

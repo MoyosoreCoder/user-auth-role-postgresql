@@ -1,4 +1,4 @@
-//DataTypes is used insequelize
+//DataTypes is used in sequelize
 import { DataTypes } from "sequelize";
 
 // Define user data,create a function
