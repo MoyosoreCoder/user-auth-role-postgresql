@@ -3,6 +3,8 @@ import { dbconnect } from "./db/dbconnect.js";
 import apiRouter from "./routes/authRoute.js";
 
 const app = express();
+//middleware to allow json request
+app.use(express.json());
 
 app.use("/api", apiRouter);
 dbconnect();
