@@ -19,7 +19,7 @@ export const registerUser = async (req, res) => {
     if (checkUserExist) {
       res.status(400).json("User already exits");
     } else {
-      //hashing password
+      //hashing password before creating
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
       //create user
@@ -57,7 +57,7 @@ export const loginUser = async (req, res) => {
 
     // Compare password
     const isMatch = await bcrypt.compare(password, exist.password);
-    if (!isMatch) {
+    if (!isMatch) { 
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
