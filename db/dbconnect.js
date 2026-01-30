@@ -22,7 +22,7 @@ export const dbconnect = async () => {
     User = await createUserModel(sequelize);
 
     // await sequelize.sync({ force: true });
-    //  // drops and recreates
+    // create table if it does not exist already
     await sequelize.sync({ alter: true });
     console.log("✅ Connection has been established successfully.");
   } catch (error) {
