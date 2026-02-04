@@ -86,11 +86,11 @@ export const loginUser = async (req, res) => {
 export const refreshTokenController = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken) {
+    if (!refreshToken) { 
       return res.status(401).json({ message: "refresh token not found" });
     }
     //check DB for refresh token from log in route using exist.update
-    const user = await User.findOne({ where: { refreshToken } });r
+    const user = await User.findOne({ where: { refreshToken } });
     console.log(user);
     if (!user) {
       res.status(403).json({ message: "forbidden token or token not valid" });
