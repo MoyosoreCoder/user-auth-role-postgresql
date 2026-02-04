@@ -93,7 +93,7 @@ export const refreshTokenController = async (req, res) => {
     const user = await User.findOne({ where: { refreshToken } });
     console.log(user);
     if (!user) {
-      res.status(403).json({ message: "forbidden token or token not valid" });
+      return res.status(403).json({ message: "forbidden token or token not valid" });
     }
     jwt.verify(
       refreshToken,
