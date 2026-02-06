@@ -132,14 +132,3 @@ export const logoutController = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-export const profileController = async (req, res) => {
- try {
-    // `req.user` comes from your decoded JWT
-    res.status(200).json({
-      message: "Dashboard",
-      user: req.user, // send user data decoded from token
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
