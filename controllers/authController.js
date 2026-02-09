@@ -137,7 +137,8 @@ export const profileController = async (req, res) => {
     // `req.user` comes from your decoded JWT
     res.status(200).json({
       message: "Dashboard",
-      user: req.user, // send user data decoded from token
+      // send user data decoded from token
+      user: req.user, 
     });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
