@@ -24,7 +24,7 @@ const authenticateToken = async (req, res, next) => {
   //const token = req.headers;
   // console.log(token);
   const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; // safer way
+  const token = authHeader && authHeader.split(" ")[1];
   console.log(token);
   if (!token) {
     return res.status(401).json("access token missinng");
